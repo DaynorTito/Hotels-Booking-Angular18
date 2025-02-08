@@ -1,0 +1,14 @@
+<header class="bg-[#4f931b] text-white p-4 shadow-md flex justify-between items-center">
+  <div class="flex items-center gap-4">
+    <h1 class="text-xl font-bold">RoomTrack</h1>
+  </div>
+  @if (!registering) {
+  <input type="text" placeholder="Buscar hoteles..." class="p-2 rounded-lg border border-gray-300 text-black">
+  }
+  <div class="flex gap-2">
+    @if(!registering) {
+    <button (click)="register()" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">Register</button>
+    }
+    <button (click)="login()" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg">Login</button>
+  </div>
+</header>
