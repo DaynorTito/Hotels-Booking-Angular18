@@ -1,0 +1,31 @@
+<div *ngIf="isVisible" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  (click)="onOverlayClick($event)">
+  <div class="relative w-96 p-6 rounded-lg shadow-xl transform transition-all duration-300 ease-in-out" [ngClass]="{
+    'bg-green-100 border-green-400 text-green-700': isSuccess,
+    'bg-red-100 border-red-400 text-red-700': !isSuccess
+  }" (click)="$event.stopPropagation()">
+    <button (click)="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
+      ✕
+    </button>
+
+    <div class="flex items-center">
+      <div class="mr-4">
+        <svg *ngIf="isSuccess" class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+            clip-rule="evenodd" />
+        </svg>
+        <svg *ngIf="!isSuccess" class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd"
+            d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+
+      <div>
+        <p class="text-lg font-semibold">{{ title }}</p>
+        <p class="text-sm">{{ message }}</p>
+      </div>
+    </div>
+  </div>
+</div>

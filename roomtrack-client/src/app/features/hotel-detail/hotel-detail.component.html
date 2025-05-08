@@ -1,0 +1,94 @@
+@if (hotel) {
+
+<div class="w-full">
+  <app-header-component></app-header-component>
+
+  @defer (on viewport) {
+  <app-image-carousel [images]="hotel.images" class="w-full"></app-image-carousel>
+  }
+
+  @placeholder {
+  <div class="w-full h-64 bg-gray-200 animate-pulse rounded-lg flex items-center justify-center">
+    <p class="text-gray-600 text-sm font-medium">Loading images...</p>
+  </div>
+  }
+</div>
+
+}
+@if(hotel) {
+<div class="container mx-auto px-4 py-8">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+    <div class="md:col-span-1">
+      @defer (on viewport) {
+      <app-hotel-map [latitude]="hotel.location.coordinates?.latitude ?? 0"
+        [longitude]="hotel.location.coordinates?.longitude ?? 0" [title]="hotel.name"
+        [location]="hotel.location.address + ', ' + hotel.location.city">
+      </app-hotel-map>
+      }
+
+      @placeholder {
+      <div class="flex flex-col items-center justify-center w-full h-64 bg-gray-200 animate-pulse rounded-lg">
+        <p class="text-gray-600 text-sm font-medium mb-2">Loading hotel map...</p>
+        <div class="w-5 h-5 border-4 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+      }
+    </div>
+
+
+    <div class="md:col-span-2">
+      <div class="bg-white rounded-lg shadow-lg p-6">
+        <h1 class="text-3xl font-bold text-[#618725] mb-4">{{ hotel.name }}</h1>
+
+        <div class="text-gray-600 mb-4">
+          <div class="flex items-center gap-2">
+            <i-lucide [img]="HotelIcon" size="25" class="text-[#618725]"></i-lucide>
+            <p>{{ hotel.location.address }}, {{ hotel.location.city }}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center mb-4">
+          <div class="flex">
+            @for (star of starsArray; track $index) {
+            <span class="text-yellow-500 text-3xl">★</span>
+            }
+            @if (hotel.rating % 1 !== 0) {
+            <span class="text-[#618725] text-3xl">☆</span>
+            }
+          </div>
+          <span class="ml-2 text-gray-700 text-lg">({{ hotel.rating }}/5)</span>
+        </div>
+
+
+        <div class="mb-6">
+          <div class="flex gap-2">
+            <h2 class="text-xl font-semibold text-[#618725]">Amenities</h2>
+            <i-lucide [img]="HandPlatterIcon" size="25" class="text-[#618725]"></i-lucide>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            @for(amenity of hotel.amenities; track $index) {
+            <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
+              {{ amenity }}
+            </span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <div class="flex gap-2">
+          <h2 class="text-2xl font-bold text-[#618725] mb-4">Reserve a room</h2>
+          <i-lucide [img]="BedIcon" size="27" class="text-[#618725]"></i-lucide>
+        </div>
+        @if (hotelRooms) {
+        @defer {
+        <app-reservation-form [hotelId]="hotel._id" [rooms]="hotelRooms"></app-reservation-form>
+        }
+        }
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<app-footer-component></app-footer-component>

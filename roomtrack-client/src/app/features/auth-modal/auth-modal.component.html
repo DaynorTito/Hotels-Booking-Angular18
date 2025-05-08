@@ -1,0 +1,27 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4 animate-fade-in">
+    <div class="text-center">
+      <div class="w-16 h-16 bg-[#618725] rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold mb-2 text-gray-800">Authentication Required</h3>
+      <p class="text-gray-600 mb-6">You need to be logged in to complete your reservation. Would you like to log in now?
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+      <button (click)="navigateToLogin()"
+        class="px-6 py-2 bg-[#618725] text-white rounded-lg font-medium hover:bg-[#507020] transition focus:outline-none focus:ring-2 focus:ring-[#618725] focus:ring-opacity-50">
+        Go to Login
+      </button>
+      <button (click)="closeModal()"
+        class="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="relative overflow-hidden rounded-lg h-96 w">
+  @for (image of images; track $index) {
+  <div class="absolute w-full h-full transition-opacity duration-500 ease-in-out"
+    [class.opacity-100]="currentIndex === $index" [class.opacity-0]="currentIndex !== $index">
+    <img [src]="image" alt="Hotel Image" class="w-full h-full object-cover" />
+  </div>
+  }
+
+  @if(images.length > 1) {
+  <button (click)="prevSlide()"
+    class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full">
+    &#10094;
+  </button>
+  <button (click)="nextSlide()"
+    class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full">
+    &#10095;
+  </button>
+  }
+  <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+    @for (index of images; track $index) {
+    <button (click)="goToSlide(+index)" class="w-3 h-3 rounded-full transition-colors duration-300"
+      [class.bg-white]="currentIndex === +index" [class.bg-gray-400]="currentIndex !== +index"></button>
+    }
+  </div>
+</div>

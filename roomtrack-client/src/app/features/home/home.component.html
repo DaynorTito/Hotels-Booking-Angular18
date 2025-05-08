@@ -1,0 +1,47 @@
+<div class="flex flex-col min-h-screen">
+  <app-header-component (filtersChanged)="hotelFilters = $event"></app-header-component>
+
+  <main class="flex-grow container mx-auto p-6">
+    <h1 class="text-2xl font-bold text-primaryGreen mb-6">Available Hotels</h1>
+
+    @defer (on viewport) {
+      <app-hotel-list [filters]="hotelFilters"></app-hotel-list>
+    }
+
+    @placeholder {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for(i of [1, 2, 3, 4, 5, 6]; track $index) {
+          <div
+            class="bg-white rounded-xl shadow-md overflow-hidden max-w-md animate-pulse"
+          >
+            <div class="relative h-40 bg-gray-200"></div>
+
+            <div class="p-6">
+              <div class="mb-3">
+                <div class="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                <div class="flex items-center gap-2">
+                  <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 mb-4">
+                <div class="flex gap-0.5">
+                  @for(star of [1,2,3,4,5]; track $index) {
+                    <div class="h-4 w-4 bg-gray-200 rounded-full"></div>
+                  }
+                </div>
+                <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+              </div>
+
+              <div class="flex justify-end">
+                <div class="h-10 w-24 bg-gray-300 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </main>
+
+  <app-footer-component></app-footer-component>
+</div>

@@ -1,0 +1,7 @@
+<div class="container mx-auto p-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
+    @for (hotel of hotels; track hotel._id) {
+      <app-hotel-card [hotel]="hotel" (bookHotel)="onBookHotel($event)"></app-hotel-card>
+    }
+  </div>
+</div>

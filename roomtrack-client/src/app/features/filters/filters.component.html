@@ -1,0 +1,125 @@
+@if (isFiltersOpen) {
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm transition-opacity duration-300 animate-fade-in"
+  (click)="closeFilters()">
+  <div
+    class="bg-white rounded-3xl shadow-2xl p-8 w-[800px] max-w-[92%] max-h-[90vh] overflow-y-auto relative animate-slide-up transform transition-all duration-300"
+    (click)="$event.stopPropagation()">
+
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-2xl font-bold text-[#618725]">Refine your search</h3>
+      <button class="rounded-full p-2 hover:bg-gray-100 transition-all duration-150" (click)="closeFilters()"
+        aria-label="Cerrar filtros">
+        <i-lucide [img]="CloseIcon" class="text-gray-500 w-5 h-5"></i-lucide>
+      </button>
+    </div>
+    <div class="space-y-8">
+      <div class="filter-group">
+        <div class="flex items-center gap-2 mb-3">
+          <i-lucide [img]="UsersIcon" class="text-[#618725] w-5 h-5"></i-lucide>
+          <h4 class="font-semibold text-gray-800">Number of guests</h4>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <input type="number" min="1" [value]="guests"
+            class="w-24 p-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#618725] focus:border-transparent transition"
+            (input)="updateGuests($event)">
+          <span class="text-gray-500">guests</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <h4 class="font-semibold text-gray-800 mb-3">Room type</h4>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          @for (room of roomTypes; track room) {
+          <button
+            class="relative border border-gray-300 px-4 py-3 rounded-xl text-gray-700 transition-all duration-200 shadow-sm hover:border-[#618725] group"
+            [class.bg-[#618725]]="selectedRoom === room" [class.border-[#618725]]="selectedRoom === room"
+            (click)="selectRoom(room)">
+            <span [class.font-medium]="selectedRoom === room">{{ room }}</span>
+            @if (selectedRoom === room) {
+            <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#618725]">
+              <i-lucide [img]="CheckIcon" class="w-4 h-4"></i-lucide>
+            </span>
+            }
+          </button>
+          }
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="flex items-center gap-2 mb-3">
+          <i-lucide [img]="LocationIcon" class="text-[#618725] w-5 h-5"></i-lucide>
+          <h4 class="font-semibold text-gray-800">Location</h4>
+        </div>
+
+        @if (isLoading()) {
+        <div class="py-4 text-center text-gray-500">
+          <div class="animate-pulse flex justify-center">
+            <div class="h-4 w-24 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+        } @else {
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          @for (city of cities(); track city) {
+          <button
+            class="relative border border-gray-300 px-4 py-3 rounded-xl text-gray-700 transition-all duration-200 shadow-sm hover:border-[#618725] group overflow-hidden text-ellipsis whitespace-nowrap"
+            [class.bg-[#618725]]="selectedLocation === city" [class.border-[#618725]]="selectedLocation === city"
+            (click)="selectLocation(city)">
+            <span [class.font-medium]="selectedLocation === city">{{ city }}</span>
+            @if (selectedLocation === city) {
+            <span class="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#618725]">
+              <i-lucide [img]="CheckIcon" class="w-4 h-4"></i-lucide>
+            </span>
+            }
+          </button>
+          }
+        </div>
+        }
+      </div>
+
+      <div class="filter-group">
+        <div class="flex items-center gap-2 mb-3">
+          <i-lucide [img]="SliderIcon" class="text-[#618725] w-5 h-5"></i-lucide>
+          <h4 class="font-semibold text-gray-800">Price range</h4>
+        </div>
+
+        <div class="mb-8">
+          <div class="flex justify-between mb-2 text-gray-600">
+            <span>${{ minPrice }}</span>
+            <span>${{ maxPrice }}</span>
+          </div>
+
+          <div class="relative pt-5 pb-1">
+            <div class="absolute h-2 w-full bg-gray-200 rounded-lg"></div>
+
+            <div class="absolute h-2 bg-[#618725] rounded-lg" [style.left]="(minPrice / systemMaxPrice) * 100 + '%'"
+              [style.right]="100 - (maxPrice / systemMaxPrice) * 100 + '%'"></div>
+
+            <input type="range" [min]="0" [max]="systemMaxPrice" [value]="minPrice"
+              class="absolute w-full appearance-none bg-transparent cursor-pointer z-10"
+              (input)="updateMinPrice($event)">
+
+            <input type="range" [min]="0" [max]="systemMaxPrice" [value]="maxPrice"
+              class="absolute w-full appearance-none bg-transparent cursor-pointer z-10"
+              (input)="updateMaxPrice($event)">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200">
+      <button
+        class="flex-1 py-3 px-6 rounded-xl border border-gray-300 font-medium text-gray-700 hover:bg-gray-50 transition-all"
+        (click)="clearFilters()" [disabled]="!hasActiveFilters()" [class.opacity-50]="!hasActiveFilters()"
+        [class.cursor-not-allowed]="!hasActiveFilters()">
+        Clear filters
+      </button>
+      <button
+        class="flex-1 py-3 px-6 rounded-xl bg-[#618725] text-white font-medium hover:bg-[#507020] transition-all shadow-lg"
+        (click)="applyFilters()">
+        Apply Filters
+      </button>
+    </div>
+  </div>
+</div>
+}

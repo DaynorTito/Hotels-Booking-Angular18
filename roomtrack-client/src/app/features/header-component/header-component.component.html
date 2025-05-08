@@ -1,0 +1,66 @@
+<header class="sticky top-0 z-50 bg-[#618725] px-4 md:px-8 py-4 flex items-center justify-between shadow-sm border-b border-[#618725]">
+  <div class="flex items-center space-x-3 hover:opacity-90 transition-opacity">
+    <a [routerLink]="'/'" class="flex items-center space-x-3">
+      <img [src]="logoPath" alt="Hotel Booking Logo" class="animate-item h-8 w-8 sm:h-10 sm:w-10 drop-shadow-sm">
+      <span class="animate-item text-white font-bold text-lg sm:text-xl tracking-tight hidden sm:inline">Hotel Booking</span>
+    </a>
+  </div>
+
+  @if (showSearchBar) {
+    <div class="flex-1 flex justify-center">
+      <div class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-full shadow-sm hover:shadow-md transition-all duration-200 w-full max-w-[90%] sm:max-w-[500px] lg:max-w-[600px]">
+        <div class="flex-1 flex items-center gap-3">
+          <i-lucide [img]="SearchIcon" class="w-5 h-5 text-gray-400"></i-lucide>
+          <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="searchByName()" placeholder="Search hotels..."
+            class="w-full outline-none text-gray-700 text-sm py-1">
+        </div>
+        <button (click)="openFilters()"
+          class="flex items-center gap-1 py-1 px-3 rounded-full bg-[#618725]/10 text-[#618725] font-medium hover:bg-[#618725]/20 transition-all text-sm">
+          <i-lucide [img]="FiltersIcon" class="w-4 h-4"></i-lucide>
+          <span class="hidden sm:inline">Filters</span>
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (user$ | async; as user) {
+    <div class="relative">
+      <button (click)="toggleDropdown()"
+        class="flex items-center space-x-3 px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-white/10 transition-all duration-200">
+        <span class="font-medium text-white text-lg sm:text-xl">{{ user.name }}</span>
+        <i-lucide [img]="CircleUserRoundIcon" size="28" class="text-white text-3xl sm:text-4xl"></i-lucide>
+      </button>
+      @if (dropdownOpen) {
+      <div @dropdownAnimation
+        class="absolute right-0 mt-4 w-48 sm:w-56 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden">
+        <div class="p-4 border-b border-gray-100">
+          <p class="text-sm text-gray-600">Signed in as</p>
+          <p class="font-medium text-gray-900">{{ user.name }}</p>
+        </div>
+        <div class="py-2">
+          <a [routerLink]="'/mybookings'"
+            class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+            <span class="flex-1">My Reservations</span>
+            <i-lucide [img]="CalendarIcon" class="w-5 h-5 text-gray-400"></i-lucide>
+          </a>
+          <button (click)="logout()"
+            class="flex items-center w-full px-4 py-3 text-gray-700 hover:bg-red-100 transition-colors duration-200">
+            <span class="flex-1">Log Out</span>
+            <i-lucide [img]="LogoutIcon" class="w-5 h-5 text-gray-400"></i-lucide>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  } @else {
+    <a [routerLink]="'/login'"
+      class="flex items-center space-x-3 px-4 py-2 md:px-6 md:py-3 rounded-lg hover:bg-white/10 transition-all duration-200">
+      <span class="font-medium text-white text-lg sm:text-xl">Login</span>
+      <i-lucide [img]="CircleUserRoundIcon" size="28" class="text-white text-3xl sm:text-4xl"></i-lucide>
+    </a>
+  }
+</header>
+
+@if (isFiltersOpen) {
+  <app-filters (filtersApplied)="applyFilters($event)" (close)="closeFilters()"></app-filters>
+}

@@ -1,0 +1,251 @@
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-4">
+        <h3 class="text-xl font-bold text-[#618725]">Available Rooms</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @for (room of rooms; track room._id) {
+        <div class="border-2 rounded-lg p-5 transition-all duration-300 hover:shadow-md"
+          [class.bg-gray-50]="!room.isAvailable" [class.opacity-60]="!room.isAvailable"
+          [class.border-[#e0ebd0]]="room.isAvailable" [class.border-gray-200]="!room.isAvailable">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="text-sm mt-1 mb-3 text-gray-700 flex items-center">
+                <i-lucide [img]="BedDoubleIcon" size="16" class="text-gray-700 mr-1"></i-lucide>
+                <h4 class="font-semibold text-lg">{{ room.type }}</h4>
+              </div>
+              <div class="text-sm mt-1 mb-3 text-gray-700 flex items-center">
+                <i-lucide [img]="UsersIcon" size="16" class="text-gray-500 mr-1"></i-lucide>
+                <span>{{ room.capacity }} {{ room.capacity === 1 ? 'person' : 'persons' }}</span>
+              </div>
+              <div class="text-[#618725] font-bold text-xl">${{ room.price }}<span
+                  class="text-sm font-normal text-gray-600"> / night</span></div>
+            </div>
+            <div>
+              @if (room.isAvailable) {
+              <div class="px-3 py-2 rounded-lg">
+                <span class="text-sm font-medium text-[#618725]">Quantity</span>
+                <select [formControlName]="'room_' + room._id"
+                  class="w-full mt-1 border-2 border-[#e0ebd0] rounded-md p-2 focus:border-[#618725] focus:ring-0"
+                  (change)="updateTotalPrice()">
+                  <option [value]="0">0</option>
+                  <option [value]="1">1</option>
+                  <option [value]="2">2</option>
+                  <option [value]="3">3</option>
+                </select>
+              </div>
+              }
+              @if (!room.isAvailable) {
+              <div class="bg-red-50 text-red-600 font-medium px-3 py-2 rounded-lg flex items-center">
+                <i-lucide [img]="XCircleIcon" size="16" class="mr-1"></i-lucide>
+                Not available
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-4">
+        <h3 class="text-xl font-bold text-[#618725]">Your Stay</h3>
+        <i-lucide [img]="CalendarIcon" size="24" class="text-[#618725]"></i-lucide>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 rounded-lg">
+        <div>
+          <label class="block mb-2 font-medium text-gray-700" for="checkInDate">Entry date</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i-lucide [img]="CalendarDaysIcon" size="18" class="text-gray-500"></i-lucide>
+            </div>
+            <input type="date" id="checkInDate" formControlName="checkInDate"
+              class="w-full pl-10 p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+              (change)="updateTotalPrice()">
+          </div>
+          @if (bookingForm.errors?.['pastCheckInDate']) {
+          <div class="text-red-500 text-sm mt-2 flex items-center">
+            <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+            Entry date cannot be in the past.
+          </div>
+          }
+        </div>
+
+        <div>
+          <label class="block mb-2 font-medium text-gray-700" for="checkOutDate">Departure date</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i-lucide [img]="CalendarXIcon" size="18" class="text-gray-500"></i-lucide>
+            </div>
+            <input type="date" id="checkOutDate" formControlName="checkOutDate"
+              class="w-full pl-10 p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+              (change)="updateTotalPrice()">
+          </div>
+        </div>
+      </div>
+
+      @if (bookingForm.errors?.['invalidDateRange']) {
+      <div class="text-red-500 text-sm mt-2 flex items-center">
+        <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+        The entry date cannot be after the departure date.
+      </div>
+      }
+    </div>
+
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-4">
+        <h3 class="text-xl font-bold text-[#618725]">Guest Information</h3>
+        <i-lucide [img]="GuestIcon" size="24" class="text-[#618725]"></i-lucide>
+      </div>
+
+      <div formGroupName="guestDetails" class="p-5 rounded-lg">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+          <div>
+            <label class="block mb-2 font-medium text-gray-700" for="firstName">Name</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i-lucide [img]="UserIcon" size="18" class="text-gray-500"></i-lucide>
+              </div>
+              <input type="text" id="firstName" formControlName="firstName"
+                class="w-full pl-10 p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+                placeholder="First name">
+            </div>
+            @if (guestDetails?.get('firstName')?.invalid && guestDetails?.get('firstName')?.touched) {
+            <div class="text-red-500 text-sm mt-2 flex items-center">
+              <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+              Name is required
+            </div>
+            }
+          </div>
+
+          <div>
+            <label class="block mb-2 font-medium text-gray-700" for="lastName">Last name</label>
+            <input type="text" id="lastName" formControlName="lastName"
+              class="w-full p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+              placeholder="Last name">
+            @if (guestDetails?.get('lastName')?.invalid && guestDetails?.get('lastName')?.touched) {
+            <div class="text-red-500 text-sm mt-2 flex items-center">
+              <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+              Last name is required
+            </div>
+            }
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-2 font-medium text-gray-700" for="email">E-mail address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i-lucide [img]="MailIcon" size="18" class="text-gray-500"></i-lucide>
+            </div>
+            <input type="email" id="email" formControlName="email"
+              class="w-full pl-10 p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+              placeholder="Valid email address">
+          </div>
+          @if (guestDetails?.get('email')?.invalid && guestDetails?.get('email')?.touched) {
+          <div class="text-red-500 text-sm mt-2 flex items-center">
+            <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+            Please enter a valid email address
+          </div>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-2 font-medium text-gray-700" for="phone">Phone</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i-lucide [img]="PhoneIcon" size="18" class="text-gray-500"></i-lucide>
+            </div>
+            <input type="tel" id="phone" formControlName="phone"
+              class="w-full pl-10 p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+              placeholder="Phone number">
+          </div>
+          @if (guestDetails?.get('phone')?.invalid && guestDetails?.get('phone')?.touched) {
+          <div class="text-red-500 text-sm mt-2 flex items-center">
+            <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+            Phone number is required
+          </div>
+          }
+        </div>
+
+        <div class="mb-4">
+          <label class="block mb-2 font-medium text-gray-700" for="address">Address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i-lucide [img]="MapPinIcon" size="18" class="text-gray-500"></i-lucide>
+            </div>
+            <input type="text" id="address" formControlName="address"
+              class="w-full pl-10 p-3 border-2 border-[#e0ebd0] rounded-md focus:border-[#618725] focus:ring-0"
+              placeholder="Address">
+          </div>
+          @if (guestDetails?.get('address')?.invalid && guestDetails?.get('address')?.touched) {
+          <div class="text-red-500 text-sm mt-2 flex items-center">
+            <i-lucide [img]="AlertTriangleIcon" size="16" class="mr-1"></i-lucide>
+            Address is required
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-[#f0f5eb] p-6 rounded-lg mb-6">
+      <div class="flex justify-between items-center">
+        <span class="font-bold text-lg text-gray-700">Total</span>
+        <span class="text-2xl font-bold text-[#618725]">${{ totalPrice | number:'1.2-2' }}</span>
+      </div>
+      @if (selectedRoomsCount > 0 && nights > 0) {
+      <div class="text-sm text-gray-600 mt-2 flex items-center justify-end">
+        <i-lucide [img]="CalculatorIcon" size="16" class="text-gray-500 mr-1"></i-lucide>
+        {{ selectedRoomsCount }} {{ selectedRoomsCount === 1 ? 'room' : 'rooms' }} × {{ nights }} {{ nights === 1 ?
+        'night' : 'nights' }}
+      </div>
+      }
+    </div>
+
+    <button type="submit"
+      class="w-full flex items-center justify-center gap-2 bg-[#618725] text-white py-4 rounded-lg font-medium transition shadow-lg"
+      [disabled]="bookingForm.invalid || totalPrice === 0 || isSubmitting" [ngClass]="{
+      'opacity-80 cursor-not-allowed pointer-events-none': bookingForm.invalid || totalPrice === 0 || isSubmitting,
+      'hover:bg-[#507020] cursor-pointer': !(bookingForm.invalid || totalPrice === 0 || isSubmitting)}">
+      <i-lucide [img]="CheckCircleIcon" size="20" *ngIf="!isSubmitting"></i-lucide>
+      <span>{{ isSubmitting ? 'Processing...' : 'Confirm Reservation' }}</span>
+    </button>
+  </form>
+
+  @if (bookingSuccess) {
+  @if (bookingSuccess) {
+  <div class="mt-6 p-6 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-lg shadow-md">
+    <div class="flex items-start">
+      <i-lucide [img]="CheckCircleIcon" size="24" class="text-green-500 mr-3 mt-1"></i-lucide>
+      <div>
+        <h4 class="font-bold text-lg mb-1">Booking Successfully Completed!</h4>
+        <p>Thank you for your reservation. Your confirmation number is:</p>
+        <p class="font-mono font-bold mt-2 text-xl">{{ confirmationNumber }}</p>
+        <p class="text-sm mt-3">Your reservation is already registered. You can arrive relaxed at the hotel on the day
+          of your departure.</p>
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button
+        class="flex items-center gap-2 bg-green-500 text-white py-2 px-4 rounded-md font-medium hover:bg-green-600 transition shadow"
+        (click)="navigateToBookings()">
+        <i-lucide [img]="BedIcon" size="18"></i-lucide>
+        <span>View My Bookings</span>
+      </button>
+    </div>
+  </div>
+  }
+  }
+</div>
+<app-alert-modal [isVisible]="modalVisible" [message]="modalMessage" [title]="modalTitle" [isSuccess]="isModalSuccess"
+  (closeEvent)="modalVisible = false"></app-alert-modal>
+@if (showAuthModal) {
+<app-auth-modal [showAuthModal]="showAuthModal" (close)="handleCloseModal()">
+</app-auth-modal>
+}

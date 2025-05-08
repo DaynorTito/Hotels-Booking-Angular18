@@ -1,0 +1,18 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.container {
+  flex: 1;
+}
+.status-active {
+  @apply px-2 py-1 rounded-full bg-[#618725] bg-opacity-10 text-[#618725];
+}
+.status-pending {
+  @apply px-2 py-1 rounded-full bg-yellow-100 text-yellow-800;
+}
+.status-cancelled {
+  @apply px-2 py-1 rounded-full bg-red-100 text-red-800;
+}
